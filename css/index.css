@@ -1,0 +1,7 @@
+body {
+    background-color : var(--main-bg-color);
+    color : var(--main-fg-color);
+    font-family: "Reddit Mono", monospace;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
