@@ -2,7 +2,7 @@
 const apiUrl = "https://helldivers-2-dotnet.fly.dev"
 const planetsUrl = "/api/v1/planets"
 const planetsApi = apiUrl + planetsUrl
-var planet_view;
+var planetViewText;
 
 async function request(url){
   let response = await fetch(url)
@@ -16,11 +16,11 @@ async function request(url){
 
 async function planetViewLoader(){
   let response = await fetch("view/planets.html")
-  let parser = new DOMParser()
-  planet_view = parser.parseFromString(response.text(),'text/html')
+  planetViewText = await response.text()
 }
 
-async function load(data){
+async function loadPlanet(data){
+
 }
 
 window.onload = async () => {
@@ -29,8 +29,9 @@ window.onload = async () => {
   try{
   let data = await request(planetsApi)
   for(const element of data){
-    load(element)
+    loadPlanet(element)
   }
+  //main_content.appendChild(planet_view)
   }catch(error){
     console.error(error)
     let error_display = await fetch('view/error.html')
