@@ -29,7 +29,7 @@ async function loadPlanet(data){
   planet.innerHTML = planetViewText
   main_content.appendChild(planet)
   planet.querySelector(".planet_name").innerText = data.name
-  planet.querySelector(".planet_percentage").innerText = ((1-(data.health / data.maxHealth))*100).toPrecision(4).toString() + "%"
+  planet.querySelector(".planet_percentage").innerText = "Liberation : " + ((1-(data.health / data.maxHealth))*100).toPrecision(4).toString() + "%"
   let icon = planet.querySelector(".icon")
   console.log(data.currentOwner)
   switch(data.currentOwner){
@@ -42,6 +42,7 @@ async function loadPlanet(data){
 }
 
 async function loadElement(){
+  let main_content = document.querySelector(".main_content")
   try{
     let data = await request(planetsApi)
     document.querySelector(".main_content").innerHTML = ""
@@ -65,6 +66,6 @@ window.onload = async () => {
   planetViewLoader()
   while(true){
     loadElement()
-    await sleep(10000)
+    await sleep(20000)
   }
 }
