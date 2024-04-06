@@ -20,7 +20,21 @@ async function planetViewLoader(){
 }
 
 async function loadPlanet(data){
-
+  let main_content = document.querySelector(".main_content")
+  let planet = document.createElement("div")
+  planet.innerHTML = planetViewText
+  main_content.appendChild(planet)
+  planet.querySelector(".planet_name").innerText = data.name
+  planet.querySelector(".planet_percentage").innerText = ((data.health / data.maxHealth)*100).toPrecision(4).toString() + "%"
+  let icon = planet.querySelector(".icon")
+  console.log(data.currentOwner)
+  switch(data.currentOwner){
+    case "Terminids" :
+      icon.setAttribute("src","img/terminid.png")
+      break;
+    case "Automaton" :
+      icon.setAttribute("src","img/automaton.png")
+  }
 }
 
 window.onload = async () => {
@@ -28,8 +42,11 @@ window.onload = async () => {
   planetViewLoader()
   try{
   let data = await request(planetsApi)
+  console.log(data[0])
   for(const element of data){
-    loadPlanet(element)
+    if(element.health != element.maxHealth){
+      loadPlanet(element)
+    }
   }
   //main_content.appendChild(planet_view)
   }catch(error){
