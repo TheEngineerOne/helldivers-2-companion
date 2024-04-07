@@ -2,7 +2,10 @@
 const apiUrl = "https://helldivers-2-dotnet.fly.dev"
 const planetsUrl = "/api/v1/planets"
 const planetsApi = apiUrl + planetsUrl
-var planetViewText;
+
+
+var planetViewText = undefined
+var data = undefined
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -31,7 +34,6 @@ async function loadPlanet(data){
   planet.querySelector(".planet_name").innerText = data.name
   planet.querySelector(".planet_percentage").innerText = "Liberation : " + ((1-(data.health / data.maxHealth))*100).toPrecision(4).toString() + "%"
   let icon = planet.querySelector(".icon")
-  console.log(data.currentOwner)
   switch(data.currentOwner){
     case "Terminids" :
       icon.setAttribute("src","img/terminid.png")
@@ -44,7 +46,14 @@ async function loadPlanet(data){
 async function loadElement(){
   let main_content = document.querySelector(".main_content")
   try{
-    let data = await request(planetsApi)
+    if(data == undefined){
+      data = await request(planetsApi)
+    }else{
+      let newData = await request(planetsApi)
+      for(let i = 0, content; content = newData[i];i++){
+        Object.assign(data[i],content)
+      }
+    }
     document.querySelector(".main_content").innerHTML = ""
     for(const element of data){
       if(element.health != element.maxHealth){
@@ -52,6 +61,7 @@ async function loadElement(){
       }
     }
   }catch(error){
+    data = undefined
     console.error(error)
     let error_display = await fetch('view/error.html')
     main_content.innerHTML = await error_display.text()
@@ -66,6 +76,6 @@ window.onload = async () => {
   planetViewLoader()
   while(true){
     loadElement()
-    await sleep(20000)
+    await sleep(30000)
   }
 }
